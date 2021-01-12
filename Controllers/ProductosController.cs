@@ -8,30 +8,27 @@ namespace ApiProductos.Controllers
     [ApiController]
     public class ProductosController : ControllerBase
     {
-        private static List<ProductosViewModel> GetProductos()
+        private readonly List<ProductosViewModel> _products = new List<ProductosViewModel>()
         {
-            var list = new List<ProductosViewModel>
-            {
-                new ProductosViewModel {Id = 1, Descripcion = "Samsung Galaxy"},
-                new ProductosViewModel {Id = 2, Descripcion = "Xiaomi"},
-                new ProductosViewModel{Id=3,Descripcion = "Xbox series x"}
-            };
-            return list;
-        }
+            new ProductosViewModel {Id = 1, Descripcion = "Samsung Galaxy"},
+            new ProductosViewModel {Id = 2, Descripcion = "Xiaomi"},
+            new ProductosViewModel {Id = 3, Descripcion = "Xbox series x"}
+        };
+        
 
         //"Samsung Galaxy", "Xiaomi", "Iphone", "Xiaomi MI 10", "Huawei mate 10", "Sony xperia", "Samsung 10", "Xbox series x", "PS4", "Cargador Universal"
         
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(GetProductos());
+            return Ok(_products);
         }
 
         // GET api/<ProductosController>/5
         [HttpGet("{id}")]
         public string Get(int id)
         {
-            var p = GetProductos();
+            var p = _products;
             return p.SingleOrDefault(x => x.Id==id)?.Descripcion ;
         }
 
@@ -39,6 +36,13 @@ namespace ApiProductos.Controllers
         [HttpPost]
         public void Post([FromBody] string value)
         {
+
+            _products.Add(new ProductosViewModel
+            {
+                Id = _products.Last().Id + 1,
+                Descripcion = value
+
+            });
 
         }
 
