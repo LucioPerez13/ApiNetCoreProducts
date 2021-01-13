@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace ApiProductos.Controllers
 {
@@ -10,53 +11,73 @@ namespace ApiProductos.Controllers
     {
         private readonly List<ProductosViewModel> _products = new List<ProductosViewModel>()
         {
-            new ProductosViewModel {Id = 1, Descripcion = "Samsung Galaxy"},
-            new ProductosViewModel {Id = 2, Descripcion = "Xiaomi"},
-            new ProductosViewModel {Id = 3, Descripcion = "Xbox series x"}
+            new ProductosViewModel {Id = 1, Descripcion = "Samsung Galaxy",Precio = 23000},
+            new ProductosViewModel {Id = 2, Descripcion = "Xiaomi mi 10",Precio = 13499},
+            new ProductosViewModel {Id = 3, Descripcion = "Xbox series x",Precio = 8499},
+            new ProductosViewModel {Id = 4, Descripcion = "Samsung Galaxy 20 pro",Precio = 23000},
+            new ProductosViewModel {Id = 5, Descripcion = "PS4",Precio = 13499},
+            new ProductosViewModel {Id = 6, Descripcion = "Xbox series s",Precio = 8499},
+            new ProductosViewModel {Id = 7, Descripcion = "Disco Duro 1T HDD",Precio = 23000},
+            new ProductosViewModel {Id = 8, Descripcion = "Disco duro 128 gb SSD",Precio = 13499},
+            new ProductosViewModel {Id = 9, Descripcion = "Iphone 10",Precio = 8499},
+            new ProductosViewModel {Id = 10, Descripcion = "NIntendo Switch",Precio = 8499}
         };
-        
 
-        //"Samsung Galaxy", "Xiaomi", "Iphone", "Xiaomi MI 10", "Huawei mate 10", "Sony xperia", "Samsung 10", "Xbox series x", "PS4", "Cargador Universal"
-        
+
         [HttpGet]
         public IActionResult Get()
         {
             return Ok(_products);
         }
 
-        // GET api/<ProductosController>/5
+
         [HttpGet("{id}")]
         public string Get(int id)
         {
             var p = _products;
-            return p.SingleOrDefault(x => x.Id==id)?.Descripcion ;
+            return p.SingleOrDefault(x => x.Id == id)?.Descripcion;
         }
 
-        // POST api/<ProductosController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
 
+        [HttpPost]
+        public IActionResult Post([FromBody] ProductosViewModel vM)
+        {
+            //if (string.IsNullOrWhiteSpace(value))
+            //{
+            //    return BadRequest("Ha ocurrido un error durante la inserción.");
+            //}
             _products.Add(new ProductosViewModel
             {
                 Id = _products.Last().Id + 1,
-                Descripcion = value
-
+                Descripcion = vM.Descripcion,
+                Precio = vM.Precio
             });
-
+            return Ok(_products);
         }
 
-        // PUT api/<ProductosController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+
+        [HttpPut]
+        public IActionResult Put([FromBody] ProductosViewModel vM)
         {
-
+            //if (string.IsNullOrWhiteSpace(value))
+            //{
+            //    return BadRequest("Ha ocurrido un error durante la inserción.");
+            //}
+            //var vM = new ProductosViewModel();
+            var prod = _products.First(x => x.Id == vM.Id);
+            //JsonConvert.PopulateObject(value, vM);
+            prod.Precio = vM.Precio;
+            prod.Descripcion = vM.Descripcion;
+            return Ok(_products);
         }
 
-        // DELETE api/<ProductosController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            var prod = _products.First(x => x.Id == id);
+            _products.Remove(prod);
+            return Ok(_products);
         }
+
     }
 }
