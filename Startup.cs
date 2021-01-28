@@ -24,7 +24,7 @@ namespace ApiProductos
                 options.AddPolicy("politica",
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:3000");
+                        builder.WithMethods("PUT","POST", "DELETE", "GET").AllowAnyOrigin().AllowAnyHeader();  //http://localhost:3000
                     });
             });
             services.AddControllers();

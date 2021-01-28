@@ -74,7 +74,11 @@ namespace ApiProductos.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var prod = _products.First(x => x.Id == id);
+            var prod = _products.FirstOrDefault(x => x.Id == id);
+            if (prod == null)
+            {
+                return Ok(_products);
+            }
             _products.Remove(prod);
             return Ok(_products);
         }
